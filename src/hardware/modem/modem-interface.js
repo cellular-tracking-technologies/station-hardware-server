@@ -34,7 +34,7 @@ class ModemInterface {
   buildModemInterface() {
     this.modem.on('response', (modem_response) => {
       // we got a response from the modem - use the command set parser to parse it
-      this.log('response', modem_response);
+      this.log(modem_response);
       let parsed_response = this.command_set_parser.parseCommandResponse(modem_response);
       // merge the parsed response with our modem response information
       this.info = Object.assign(this.info, parsed_response);

@@ -54,7 +54,6 @@ class Modem extends EventEmitter {
       });
       serial_port.on('data', (data) => {
         this.handleModemResponse(data.toString());
-        this.log('modem -->', data.toString());
       });
       return serial_port;
 
@@ -130,7 +129,6 @@ class Modem extends EventEmitter {
    */
   write(data) {
     let line = data.toString().trim();
-    this.log(`modem <-- ${line}`);
     this.serial.write(line+this.line_terminator);
   }
 
