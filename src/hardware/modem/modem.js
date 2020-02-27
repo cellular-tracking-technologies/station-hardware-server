@@ -20,6 +20,14 @@ class Modem extends EventEmitter {
     this.command_stack = [];
     this.response_buffer = '';
     this.response_timeout = 5000;
+    this.response_codes = [
+      'OK',
+      'CONNECT',
+      'RING',
+      'NO CARRIER',
+      'ERROR',
+      'NO DIALTONE'
+    ]
     this.lock = false;
   }
 
@@ -39,6 +47,7 @@ class Modem extends EventEmitter {
 
   /**
    * build the serial port interface
+   * return a promise that resolves when the modem serial port is opened
    */
   buildModemInterface() {
     return new Promise((resolve, reject) => {
@@ -53,10 +62,17 @@ class Modem extends EventEmitter {
         reject(err);
       });
       serial_port.on('data', (data) => {
-        this.handleModemResponse(data.toString());
+        // buffer the received data
+        this.response_buffer += data.toString();
+        // check if the response code exists in our buffered data
+        this.response_codes.forEach((code) => {
+          if (this.response_buffer.toUpperCase().indexOf(code) > -1) {
+            this.handleModemResponse(this.response_buffer);
+            this.response_buffer = '';
+          }
+        })
       });
       return serial_port;
-
     });
   }
 
@@ -97,6 +113,7 @@ class Modem extends EventEmitter {
       if (this.lock === false) {
         // not locked - issue a command and lock the write process
         let command = this.command_stack[0];
+        command.processed_at = new Date();
         this.write(command.command);
         this.lock = true;
       } else {
@@ -119,7 +136,7 @@ class Modem extends EventEmitter {
       last_command.response_at = new Date();
       this.emit('timeout', last_command);
       this.lock = false;
-      this.processCommand();
+      setTimeout(this.processCommand.bind(this), 100);
     }
   }
 
