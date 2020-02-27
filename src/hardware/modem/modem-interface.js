@@ -2,6 +2,7 @@ import { Modem } from './modem';
 
 /**
  * modem interface around modem serial class
+ * poll modem information at a regular interval
  */
 class ModemInterface {
   /**
@@ -10,7 +11,10 @@ class ModemInterface {
    */
   constructor(opts) {
     this.modem = new Modem(opts);
+    this.command_set_parser = opts.command_set_parser;
     this.buildModemInterface();
+    this.poll_frequency_seconds = opts.poll_frequency_seconds ? opts.poll_frequency_seconds : 5000;
+    this.timer;
     this.info = {};
   }
 
@@ -25,12 +29,15 @@ class ModemInterface {
   }
 
   /**
-   * handle events from the modem
+   * handle raw responses from the modem
    */
   buildModemInterface() {
-    this.modem.on('response', (response) => {
-      this.log('response', response);
-      this.info[response.command] = response.response;
+    this.modem.on('response', (modem_response) => {
+      // we got a response from the modem - use the command set parser to parse it
+      this.log('response', modem_response);
+      let parsed_response = this.command_set_parser.parseCommandResponse(modem_response);
+      // merge the parsed response with our modem response information
+      this.info = Object.assign(this.info, parsed_response);
     });
     this.modem.on('unsolicited', (unsolicited) => {
       this.log(unsolicited);
@@ -40,17 +47,41 @@ class ModemInterface {
     });
   }
 
-  getInfo() {
-    this.modem.issueCommand('AT+CSQ');
-    this.modem.issueCommand('AT+CIMI');
-    this.modem.issueCommand('AT+GSN');
-    this.modem.issueCommand('ATI');
-    this.modem.issueCommand('AT+CREG?');
-    this.modem.issueCommand('AT');
+  /**
+   * issue list of command from modem command set
+   */
+  issueCommands() {
+    this.command_set_parser.command_set.forEach((command_response) => {
+      console.log(`issuing command ${command_response.name}: ${command_response.command}`);
+      this.modem.issueCommand(command_response.command);
+    })
   }
 
+  /**
+   * start polling the modem on a regular interval
+   */
+  startPolling() {
+    if (this.timer) {
+      clearTimeout(this.timer);
+    } 
+    this.issueCommands();
+    this.timer = setInterval(this.issueCommands.bind(this), this.poll_frequency_seconds);
+  }
+
+  /**
+   * stop polling the modem
+   */
+  stopPolling() {
+    clearTimeout(this.timer);
+  }
+
+  /**
+   * open interface to the modem and start polling
+   */
   open() {
-    return this.modem.start();
+    this.modem.start().then(() => {
+      this.startPolling();
+    });
   }
 }
 

@@ -2,26 +2,22 @@ var express = require('express');
 var router = express.Router();
 
 import { ModemInterface } from '../hardware/modem/modem-interface';
+import QuectelCommandSetParser from '../hardware/modem/quectel-command-set';
 
 const Modem = new ModemInterface({
   uri: '/dev/station_modem_status',
   baud_rate: 115200,
+  command_set_parser: QuectelCommandSetParser
 });
 Modem.open()
 
-setInterval(Modem.getInfo.bind(Modem), 2000);
 setInterval(() =>{
   console.log(Modem.info);
 }, 5000);
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  let data = {
-    signal: -90,
-    tower: 'AT&T'
-  }
-  Modem.issueCommand('AT+CSQ');
-  res.json(data);
+  res.json(Modem.info);
 });
 
 module.exports = router;

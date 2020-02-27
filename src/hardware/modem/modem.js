@@ -27,30 +27,38 @@ class Modem extends EventEmitter {
    * start the modem interface
    */
   start() {
-    this.serial = this.buildModemInterface();
+    return new Promise((resolve, reject) => {
+      this.buildModemInterface().then((serial_port) => {
+        this.serial = serial_port;
+        resolve();
+      }).catch((err) => {
+        reject(err);
+      });
+    })
   }
 
   /**
    * build the serial port interface
    */
   buildModemInterface() {
-    this.log(`starting modem interface on port ${this.uri} @ ${this.baud_rate}`);
-    let serial_port = new SerialPort(this.uri, {
-      baudRate: this.baud_rate
+    return new Promise((resolve, reject) => {
+      this.log(`starting modem interface on port ${this.uri} @ ${this.baud_rate}`);
+      let serial_port = new SerialPort(this.uri, {
+        baudRate: this.baud_rate
+      });
+      serial_port.on('open', () => {
+        resolve(serial_port);
+      });
+      serial_port.on('error', (err) => {
+        reject(err);
+      });
+      serial_port.on('data', (data) => {
+        this.handleModemResponse(data.toString());
+        this.log('modem -->', data.toString());
+      });
+      return serial_port;
+
     });
-    serial_port.on('open', () => {
-      this.log('opened modem serial interface');
-      this.emit('conneced');
-    });
-    serial_port.on('error', (err) => {
-      this.emit('error', err.toString());
-      console.error('error with modem interface', err.toString());
-    });
-    serial_port.on('data', (data) => {
-      this.handleModemResponse(data.toString());
-      this.log('modem -->', data.toString());
-    });
-    return serial_port;
   }
 
   /**
@@ -86,17 +94,18 @@ class Modem extends EventEmitter {
    */
   processCommand() {
     if (this.command_stack.length > 0) {
+      // check if writing is locked
       if (this.lock === false) {
+        // not locked - issue a command and lock the write process
         let command = this.command_stack[0];
         this.write(command.command);
         this.lock = true;
       } else {
-        this.log('command lock - not proccessing;  trying again later');
-        setTimeout(this.processCommand.bind(this), 1000);
+        setTimeout(this.processCommand.bind(this), 200);
       }
     } else {
+      // no commands in the stack - unlock command write access
       this.lock = false;
-      this.log('finished processing commands');
     }
   }
 
@@ -104,6 +113,7 @@ class Modem extends EventEmitter {
    * handle a command timeout
    */
   commandTimeout() {
+    // if there are commands in the queue - pop the earliest command from the queue as a timeout
     if (this.command_stack.length > 0) {
       let last_command = this.command_stack.shift();
       this.log(`command ${last_command.command} timed out`);
@@ -116,7 +126,7 @@ class Modem extends EventEmitter {
 
   /**
    * 
-   * @param {*} data - string write data to the modem
+   * @param {*} data - string write raw data to the modem
    */
   write(data) {
     let line = data.toString().trim();
