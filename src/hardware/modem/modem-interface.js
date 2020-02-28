@@ -13,7 +13,7 @@ class ModemInterface {
     this.modem = new Modem(opts);
     this.command_set_parser = opts.command_set_parser;
     this.buildModemInterface();
-    this.poll_frequency_seconds = opts.poll_frequency_seconds ? opts.poll_frequency_seconds : 5000;
+    this.poll_frequency_seconds = opts.poll_frequency_seconds ? opts.poll_frequency_seconds*1000 : 5000;
     this.timer;
     this.info = {};
   }
@@ -52,8 +52,9 @@ class ModemInterface {
    */
   issueCommands() {
     this.command_set_parser.command_set.forEach((command_response) => {
-      console.log(`issuing command ${command_response.name}: ${command_response.command}`);
-      this.modem.issueCommand(command_response.command);
+      this.modem.issueCommand({
+        command: command_response.command,
+      });
     })
   }
 

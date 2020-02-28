@@ -20,6 +20,7 @@ class Modem extends EventEmitter {
     this.command_stack = [];
     this.response_buffer = '';
     this.response_timeout = 5000;
+    this.next_command_delay = 2500;
     this.response_codes = [
       'OK',
       'CONNECT',
@@ -67,7 +68,10 @@ class Modem extends EventEmitter {
         // check if the response code exists in our buffered data
         this.response_codes.forEach((code) => {
           if (this.response_buffer.toUpperCase().indexOf(code) > -1) {
-            this.handleModemResponse(this.response_buffer);
+            this.handleModemResponse({
+              data: this.response_buffer.replace(code, '').trim(), 
+              code: code
+            });
             this.response_buffer = '';
           }
         })
@@ -91,12 +95,11 @@ class Modem extends EventEmitter {
    * @param {*} command - string
    * return command id pushed to command stack for event retrieval
    */
-  issueCommand(command) {
+  issueCommand(opts) {
     let id = uuidv4();
-
     this.command_stack.push({
       command_id: id,
-      command: command,
+      command: opts.command,
       timeout: setTimeout(this.commandTimeout.bind(this), this.response_timeout),
       issued_at: new Date()
     });
@@ -117,7 +120,7 @@ class Modem extends EventEmitter {
         this.write(command.command);
         this.lock = true;
       } else {
-        setTimeout(this.processCommand.bind(this), 200);
+        setTimeout(this.processCommand.bind(this), this.next_command_delay);
       }
     } else {
       // no commands in the stack - unlock command write access
@@ -136,7 +139,7 @@ class Modem extends EventEmitter {
       last_command.response_at = new Date();
       this.emit('timeout', last_command);
       this.lock = false;
-      setTimeout(this.processCommand.bind(this), 100);
+      setTimeout(this.processCommand.bind(this), this.next_command_delay);
     }
   }
 
@@ -153,19 +156,20 @@ class Modem extends EventEmitter {
    * 
    * @param {*} data - string block of data from the modem
    */
-  handleModemResponse(data) {
+  handleModemResponse(opts) {
     // if there is a command in queue - associate response with last command
     if (this.command_stack.length > 0) {
       let last_command = this.command_stack.shift();
       // assume response to the most recent command - clear timeout 
       clearTimeout(last_command.timeout);
       delete last_command.timeout;
-      last_command.response = data.trim();
+      last_command.response = opts.data.trim();
       last_command.response_at = new Date();
+      last_command.code = opts.code;
       this.emit('response', last_command);
       // process more commands, if in queue
       this.lock = false;
-      setTimeout(this.processCommand.bind(this), 100);
+      setTimeout(this.processCommand.bind(this), 500);
     } else {
       // unsolicited data?
       this.emit('unsolicited', data);
