@@ -5,7 +5,9 @@
   "scripts": {
     "build": "babel src -d lib",
     "start": "node ./lib/bin/www",
-    "dev": "npm run build && npm run start"
+    "debug": "node --inspect ./lib/bin/www",
+    "compile": "babel src -d lib --source-maps --watch",
+    "dev": "npm run build && npm run debug"
   },
   "dependencies": {
     "express": "~4.16.1",
