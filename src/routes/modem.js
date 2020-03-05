@@ -1,8 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-import { ModemInterface } from '../hardware/modem/modem-interface';
-import QuectelCommandSetParser from '../hardware/modem/quectel-command-set';
+const { ModemInterface, QuectelCommandSetParser } = require('modem-status-driver');
 
 const Modem = new ModemInterface({
   uri: '/dev/station_modem_status',
@@ -10,7 +9,7 @@ const Modem = new ModemInterface({
   command_set_parser: QuectelCommandSetParser,
   poll_frequency_seconds: 10
 });
-Modem.open()
+Modem.open();
 
 setInterval(() =>{
   console.log(Modem.info);

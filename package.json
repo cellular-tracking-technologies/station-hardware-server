@@ -11,8 +11,7 @@
   },
   "dependencies": {
     "express": "~4.16.1",
-    "serialport": "^8.0.7",
-    "uuid": "^7.0.1"
+    "modem-status-driver": "file:../dependencies/modem-status-driver"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
