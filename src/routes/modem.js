@@ -13,7 +13,7 @@ Modem.open();
 
 setInterval(() =>{
   console.log(Modem.info);
-}, 5000);
+}, 15000);
 
 /* GET home page. */
 router.get('/', function(req, res, next) {

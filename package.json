@@ -11,7 +11,9 @@
   },
   "dependencies": {
     "express": "~4.16.1",
-    "modem-status-driver": "file:../dependencies/modem-status-driver"
+    "modem-status-driver": "file:../dependencies/modem-status-driver",
+    "i2c-bus": "^5.1.0",
+    "onoff": "^5.0.1",
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
