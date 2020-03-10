@@ -10,10 +10,10 @@
     "dev": "npm run build && npm run debug"
   },
   "dependencies": {
+    "adc-driver": "file:../dependencies/adc-driver",
     "express": "~4.16.1",
     "modem-status-driver": "file:../dependencies/modem-status-driver",
-    "i2c-bus": "^5.1.0",
-    "onoff": "^5.0.1"
+    "usb-storage-driver": "file:../dependencies/usb-storage-driver"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
