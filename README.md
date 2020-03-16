@@ -22,3 +22,16 @@ Establish an SSH tunnel from your local machine to the target machine:
 Open [Chrome Dev Tool Device Inspector](chrome://inspect/#devices)
 `chrome://inspect/#devices`
 
+## Api Testing
+
+curl localhost:3000/usb && echo ''
+
+[{"name":"sda1","fs_type":"vfat","uuid":"0B06-2431"}]
+
+curl localhost:3000/sensor/voltages && echo ''
+
+{"battery":"11.94","solar":"0.00","rtc":"3.25"}
+
+curl localhost:3000/modem && echo ''
+
+{"signal":"-75, ?","imsi":"310260859158404","imei":"866834040905460","sim":"8901260852391584042","info":"Quectel EC25","creg":"Home","carrier":"T-Mobile,LTE","ok":"AT"}
