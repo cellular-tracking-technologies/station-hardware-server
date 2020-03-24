@@ -11,14 +11,14 @@ temp.init();
 let temperature = {}
 let voltages = {}
 
-setInterval(() =>{
+setInterval(() => {
 
     voltages.battery = (adc.read(0) * (5.016 / 4096) * 6).toFixed(2);
     voltages.solar = (adc.read(1) * (5.016 / 4096) * 6).toFixed(2);
     voltages.rtc = (adc.read(2) * (5.016 / 4096)).toFixed(2);
 
-    temperature.celsius =  temp.read().toFixed(2);
-    temperature.fahrenheit = (temperature.celsius * 1.8 + 32).toFixed(2);
+    temperature.celsius =  temp.read().toFixed(0);
+    temperature.fahrenheit = (temperature.celsius * 1.8 + 32).toFixed(0);
 
 }, 5000);
 
