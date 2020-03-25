@@ -13,6 +13,7 @@
     "adc-driver": "file:../dependencies/adc-driver",
     "express": "~4.16.1",
     "gps-client": "file:../dependencies/gps-client",
+    "led-driver": "file:../dependencies/led-driver",
     "modem-status-driver": "file:../dependencies/modem-status-driver",
     "usb-storage-driver": "file:../dependencies/usb-storage-driver",
     "wifi-config": "^1.0.1"
