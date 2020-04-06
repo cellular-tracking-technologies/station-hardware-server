@@ -7,14 +7,17 @@
     "start": "node ./lib/bin/www",
     "debug": "node --inspect ./lib/bin/www",
     "compile": "babel src -d lib --source-maps --watch",
+    "toggle-modem-light": "node ./lib/scripts/toggle_modem.js",
     "dev": "npm run build && npm run debug"
   },
   "dependencies": {
     "adc-driver": "file:../dependencies/adc-driver",
     "express": "~4.16.1",
     "gps-client": "file:../dependencies/gps-client",
+    "icmp": "^1.4.0",
     "led-driver": "file:../dependencies/led-driver",
     "modem-status-driver": "file:../dependencies/modem-status-driver",
+    "node-fetch": "^2.6.0",
     "usb-storage-driver": "file:../dependencies/usb-storage-driver",
     "wifi-config": "^1.0.1"
   },
