@@ -16,6 +16,7 @@ class ComputeModule {
   }
 
   info() {
+    this.parse();
     return this.getDiskUsagePercent()
     .then((usage) => {
       let module_info = this.data();
