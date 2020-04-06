@@ -3,6 +3,9 @@ var router = express.Router();
 const { exec } = require('child_process');
 var fs = require('fs');
 var path = require('path');
+import { ComputeModule }  from './compute-module';
+
+const ModuleInfo = new ComputeModule();
 
 class FileFinder {
     constructor(options) {
@@ -87,6 +90,16 @@ router.get('/', function(req, res, next) {
 
 router.get('/id', function(req, res, next) {
     res.json({id: device_id});
+});
+
+router.get('/about', (req, res, next) => {
+    ModuleInfo.info()
+    .then((info) => {
+        res.json(info);
+    })
+    .catch((err) => {
+        res.json({ err: err.toString() });
+    });
 });
 
 router.get('/node/version', function(req, res, next) {
