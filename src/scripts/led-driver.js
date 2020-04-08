@@ -7,7 +7,7 @@ class LedDriver {
       'b',
       'gps'
     ]
-    this.endpoint = 'http://localhost:3000/led/diag';
+    this.endpoint = 'http://localhost:3000/led';
   }
 
   post(opts) {
@@ -20,7 +20,13 @@ class LedDriver {
 
   toggleLight(opts) {
     if (this.leds.includes(opts.led)) {
-      let uri = `${this.endpoint}/${opts.led}`;
+      let uri;
+      if (opts.led == 'gps') {
+        uri = `${this.endpoint}/${opts.led}`;
+      } else {
+        uri = `${this.endpoint}/led/${opts.led}`;
+      }
+      console.log('toggle', uri);
       let payload = {
         state: opts.state
       }
