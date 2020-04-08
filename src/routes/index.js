@@ -95,6 +95,7 @@ router.get('/id', function(req, res, next) {
 router.get('/about', (req, res, next) => {
     ModuleInfo.info()
     .then((info) => {
+        info.station_id = device_id;
         res.json(info);
     })
     .catch((err) => {
