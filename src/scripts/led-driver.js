@@ -24,7 +24,7 @@ class LedDriver {
       if (opts.led == 'gps') {
         uri = `${this.endpoint}/${opts.led}`;
       } else {
-        uri = `${this.endpoint}/led/${opts.led}`;
+        uri = `${this.endpoint}/diag/${opts.led}`;
       }
       console.log('toggle', uri);
       let payload = {
