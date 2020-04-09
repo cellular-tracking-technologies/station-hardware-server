@@ -1,7 +1,6 @@
 {
   "name": "station-hardware-server",
   "version": "0.0.0",
-  "private": true,
   "scripts": {
     "build": "babel src -d lib",
     "start": "node ./lib/bin/www",
@@ -12,14 +11,14 @@
     "dev": "npm run build && npm run debug"
   },
   "dependencies": {
+    "@cellular-tracking-technologies/adc-driver": "^1.0.0",
+    "@cellular-tracking-technologies/gps-client": "^1.0.0",
     "@cellular-tracking-technologies/led-driver": "^1.0.0",
-    "adc-driver": "file:../dependencies/adc-driver",
+    "@cellular-tracking-technologies/modem-status-driver": "^0.1.0",
+    "@cellular-tracking-technologies/usb-storage-driver": "^1.0.0",
     "express": "~4.16.1",
-    "gps-client": "file:../dependencies/gps-client",
     "icmp": "^1.4.0",
-    "modem-status-driver": "file:../dependencies/modem-status-driver",
     "node-fetch": "^2.6.0",
-    "usb-storage-driver": "file:../dependencies/usb-storage-driver",
     "wifi-config": "^1.0.1"
   },
   "devDependencies": {

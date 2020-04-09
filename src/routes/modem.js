@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-const { ModemInterface, QuectelCommandSetParser } = require('modem-status-driver');
+const { ModemInterface, QuectelCommandSetParser } = require('@cellular-tracking-technologies/modem-status-driver');
 
 const Modem = new ModemInterface({
   uri: '/dev/station_modem_status',

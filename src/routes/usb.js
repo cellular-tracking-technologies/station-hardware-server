@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const fs = require('fs')
+const {UsbStorage, BlockDeviceCmd} = require('@cellular-tracking-technologies/usb-storage-driver');
 // const WifiConfig = require('wifi-config').default;
 
 
@@ -33,7 +34,6 @@ class WifiConfig {
 }
 
 
-const {UsbStorage, BlockDeviceCmd} = require('usb-storage-driver');
 
 let usb = new UsbStorage();
 
