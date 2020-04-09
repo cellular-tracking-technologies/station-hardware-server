@@ -30,4 +30,11 @@ router.get('/temperature', function(req, res, next) {
     res.json(temperature);
 });
 
+router.get('/details', (req, res, next) => {
+    res.json({
+        voltages: voltages,
+        temperature: temperature
+    });
+})
+
 module.exports = router;

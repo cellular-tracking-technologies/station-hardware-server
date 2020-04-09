@@ -96,6 +96,11 @@ router.get('/about', (req, res, next) => {
     ModuleInfo.info()
     .then((info) => {
         info.station_id = device_id;
+        return info;
+    })
+    .then((info) => {
+        let station_image = fs.readFileSync('/etc/ctt/station-image');
+        info.station_image = station_image.toString();
         res.json(info);
     })
     .catch((err) => {
