@@ -1,6 +1,6 @@
 {
   "name": "station-hardware-server",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "scripts": {
     "build": "babel src -d lib",
     "start": "node ./lib/bin/www",
