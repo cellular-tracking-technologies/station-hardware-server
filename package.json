@@ -12,11 +12,11 @@
     "dev": "npm run build && npm run debug"
   },
   "dependencies": {
+    "@cellular-tracking-technologies/led-driver": "^1.0.0",
     "adc-driver": "file:../dependencies/adc-driver",
     "express": "~4.16.1",
     "gps-client": "file:../dependencies/gps-client",
     "icmp": "^1.4.0",
-    "led-driver": "file:../dependencies/led-driver",
     "modem-status-driver": "file:../dependencies/modem-status-driver",
     "node-fetch": "^2.6.0",
     "usb-storage-driver": "file:../dependencies/usb-storage-driver",
