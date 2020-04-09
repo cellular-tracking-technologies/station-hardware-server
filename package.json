@@ -1,6 +1,11 @@
 {
   "name": "station-hardware-server",
+<<<<<<< HEAD
   "version": "0.1.0",
+=======
+  "author": "Bob Fogg",
+  "version": "0.0.0",
+>>>>>>> afc07c6edbab269c5c06ce3ef26f2882c7ba6d15
   "scripts": {
     "build": "babel src -d lib",
     "start": "node ./lib/bin/www",
@@ -9,6 +14,10 @@
     "toggle-modem-led": "node ./lib/scripts/toggle_modem.js",
     "toggle-gps-led": "node ./lib/scripts/toggle_gps_led.js",
     "dev": "npm run build && npm run debug"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cellular-tracking-technologies/station-hardware-server.git"
   },
   "dependencies": {
     "@cellular-tracking-technologies/adc-driver": "^1.0.0",
