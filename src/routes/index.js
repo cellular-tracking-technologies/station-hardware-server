@@ -100,7 +100,9 @@ router.get('/about', (req, res, next) => {
     })
     .then((info) => {
         let station_image = fs.readFileSync('/etc/ctt/station-image');
-        info.station_image = station_image.toString();
+        info.station_image = station_image.toString().trim();
+        let station_image_software = fs.readFileSync('/etc/ctt/station-software');
+        info.station_software = station_image_software.toString().trim();
         res.json(info);
     })
     .catch((err) => {
