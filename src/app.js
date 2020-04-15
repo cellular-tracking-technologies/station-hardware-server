@@ -6,6 +6,7 @@ var sensorRouter = require('./routes/sensor');
 var usbRouter = require('./routes/usb');
 var gpsRouter = require('./routes/gps');
 var ledRouter = require('./routes/led');
+var internetRouter = require('./routes/internet');
 var peripheralRouter = require('./routes/peripherals');
 
 var app = express();
@@ -20,6 +21,7 @@ app.use('/usb', usbRouter);
 app.use('/gps', gpsRouter);
 app.use('/led', ledRouter);
 app.use('/peripherals', peripheralRouter);
+app.use('/internet', internetRouter);
 
 // error handler
 app.use(function(err, req, res, next) {
