@@ -9,7 +9,7 @@ const ping = function() {
   return new Promise((resolve, reject) => {
     icmp.send(PING_IP)
     .then((ping_result) => {
-      resolve(ping_result);
+      resolve(ping_result.open);
     })
     .catch((err) => {
       reject(err);
