@@ -19,7 +19,7 @@
     "@cellular-tracking-technologies/adc-driver": "^1.0.0",
     "@cellular-tracking-technologies/gps-client": "^1.0.0",
     "@cellular-tracking-technologies/led-driver": "^1.0.0",
-    "@cellular-tracking-technologies/modem-status-driver": "^0.1.0",
+    "@cellular-tracking-technologies/modem-status-driver": "^0.1.2",
     "@cellular-tracking-technologies/usb-storage-driver": "^1.0.0",
     "express": "~4.16.1",
     "icmp": "^1.4.0",
