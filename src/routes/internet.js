@@ -1,5 +1,8 @@
-var express = require('express');
-var router = express.Router();
+const fs = require('fs');
+const glob = require('glob');
+const path = require('path');
+const express = require('express');
+const router = express.Router();
 const icmp = require("icmp");
 
 const DEFAULT_PING_COUNT = 3;
@@ -44,6 +47,77 @@ router.get('/status', (req, res, next) => {
       fail: ping_count 
     });
   })
+});
+
+const getStatsForDir = (opts) => {
+  return new Promise((resolve, reject) => {
+    let bytes = 0;
+    glob(opts.dir, (err, files) => {
+      if (err) {
+        // can't read the directory - nothing to send
+        resolve({
+          bytes: 0,
+          filecount: 0
+        })
+        return;
+      }
+      files.forEach((file) => {
+        try {
+          let stats = fs.statSync(file);
+          bytes += stats.size;
+        } catch(err) {
+          reject(err);
+        }
+      });
+      resolve( {
+        bytes: bytes,
+        file_count: files.length
+      });
+    });
+  });
+};
+
+const getPendingUploads = () => {
+  return new Promise((resolve, reject) => {
+
+    let promises = [
+      getStatsForDir({
+        delay: 0,
+        dir: '/data/rotated/*.gz'
+      }),
+      getStatsForDir({
+        delay: 61*60*1000,
+        dir: '/data/SGdata/*/*.gz',
+      })
+    ];
+    Promise.all(promises)
+      .then((results) => {
+        resolve({
+          ctt:results[0],
+          sg: results[1]
+        });
+      })
+      .catch((err) => {
+        console.error('something went wrong getting uploads');
+        console.error(err);
+        reject(err);
+      });
+  })
+};
+
+router.get('/pending-upload', (req, res, next) => {
+  getPendingUploads()
+    .then((info) => {
+      res.json(info);
+    })
+    .catch((err) => {
+      console.error('error getting pending uploads');
+      console.error(err);
+      res.json({
+        bytes: -1,
+        file_count: -1
+      })
+    });
 });
 
 module.exports = router;
