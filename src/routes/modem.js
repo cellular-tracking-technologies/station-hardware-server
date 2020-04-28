@@ -11,10 +11,6 @@ const Modem = new ModemInterface({
 });
 Modem.open();
 
-setInterval(() =>{
-  console.log(Modem.info);
-}, 15000);
-
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.json(Modem.info);

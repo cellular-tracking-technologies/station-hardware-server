@@ -38,7 +38,7 @@ function setLedState(led, options){
             led.blink(blink_rate);
             break;
         default:
-            console.log("default");
+            console.log("default led");
             return ret_err;
     }
     return ret_ok;
