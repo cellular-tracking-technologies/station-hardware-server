@@ -99,10 +99,16 @@ router.get('/about', (req, res, next) => {
         return info;
     })
     .then((info) => {
-        let station_image = fs.readFileSync('/etc/ctt/station-image');
-        info.station_image = station_image.toString().trim();
-        let station_image_software = fs.readFileSync('/etc/ctt/station-software');
-        info.station_software = station_image_software.toString().trim();
+        try {
+            let bootcount = parseInt(fs.readFileSync('/etc/bootcount').toString().trim());
+            info.bootcount = bootcount;
+            let station_image = fs.readFileSync('/etc/ctt/station-image').toString().trim();
+            info.station_image = station_image;
+            let station_image_software = fs.readFileSync('/etc/ctt/station-software').toString().trim();
+            info.station_software = station_image_software;
+        } catch(err) {
+            console.log('unable to load extra meta data', err.toString())
+        }
         res.json(info);
     })
     .catch((err) => {
