@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const { spawn } = require('child_process');
+const { exec, spawn } = require('child_process');
 
 const { ModemInterface, QuectelCommandSetParser } = require('@cellular-tracking-technologies/modem-status-driver');
 
@@ -15,6 +15,22 @@ Modem.open();
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.json(Modem.info);
+});
+
+router.get('/ppp', (req, res, next) => {
+  // check if at least 1 ppp connection exists
+  exec('ifconfig | grep ppp | wc -l', (err, stdout, stderr) => {
+    if (err) {
+      res.status(500).send(err.toString());
+    }
+    let status = false;
+    if (parseInt(stdout) > 0) {
+      status = true;
+    }
+    res.json({
+      ppp: status
+    });
+  })
 });
 
 const RunCommand = (cmd, args) => {
