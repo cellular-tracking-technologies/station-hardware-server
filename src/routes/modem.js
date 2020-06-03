@@ -10,7 +10,12 @@ const Modem = new ModemInterface({
   command_set_parser: QuectelCommandSetParser,
   poll_frequency_seconds: 10
 });
-Modem.open();
+try {
+  Modem.open();
+} catch(err) {
+  console.error('unable to open the modem');
+  console.error(err);
+}
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
