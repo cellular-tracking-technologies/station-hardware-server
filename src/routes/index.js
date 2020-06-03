@@ -1,62 +1,39 @@
 var express = require('express');
 var router = express.Router();
 const { exec } = require('child_process');
+const glob = require('glob');
 var fs = require('fs');
 var path = require('path');
 import { ComputeModule }  from './compute-module';
 
 const ModuleInfo = new ComputeModule();
 
-class FileFinder {
-    constructor(options) {
-        this.dir = options.dir;
-        this.ignore = options.ignore;
-        this.match = options.match;
-    }
-    scan() {
-        return this.walkSync_(this.dir);
-    }
-    walkSync_(dir) {
-        let list = [];
-        let files = fs.readdirSync(dir);
-        files.forEach((file) => {
-            if (fs.statSync(path.join(dir, file)).isDirectory()) {
-                if (file.match(this.ignore) == null) {
-                    list.push(...this.walkSync_(path.join(dir, file)));
-                }
-            }
-            else {
-                if (file.match(this.match) != null) {
-                    list.push(path.join(dir, file));
-                }
-            }
-        });
-        return list;
-    }
-}
-
+/**
+ * get a list of CTT software packages / versions
+ */
 function GetPackageVersions() {
-
-    let finder = new FileFinder({
-        dir: '/home/pi/ctt',
-        ignore: 'node_modules',
-        match: 'package.json'
-    });
-
-    let list = [];
-    finder.scan().forEach(file => {
-        try {
-            const contents = JSON.parse(fs.readFileSync(file, 'utf8'));
-
-            list.push({
-                name:contents.name,
-                version:contents.version
-            })
-        } catch (err) {
-            throw err;
-        }
-    });
-    return list;
+    return new Promise((resolve, reject) => {
+        let file_pattern = '/home/pi/ctt/*/package.json';
+        let packages = [];
+        glob(file_pattern, (err, filenames) => {
+            if (err) {
+                reject(err);
+            }
+            filenames.forEach((filename) => {
+                try {
+                    let contents = JSON.parse(fs.readFileSync(filename));
+                    packages.push({
+                        name: contents.name,
+                        version: contents.version
+                    });
+                } catch (err) {
+                    console.error('unable to parse package.json');
+                    console.error(err);
+                }
+            });
+            resolve(packages);
+        });
+    })
 }
 
 function deviceId(){
@@ -117,7 +94,13 @@ router.get('/about', (req, res, next) => {
 });
 
 router.get('/node/version', function(req, res, next) {
-    res.json(GetPackageVersions());
+    GetPackageVersions()
+        .then((packages) => {
+            res.json({packages: packages});
+        })
+        .catch((err) => {
+            res.status(500).send();
+        });
 });
 
 module.exports = router;
