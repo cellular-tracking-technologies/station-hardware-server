@@ -4,6 +4,7 @@ const path = require('path');
 const express = require('express');
 const router = express.Router();
 const icmp = require("icmp");
+import { exec } from 'child_process'
 
 const DEFAULT_PING_COUNT = 3;
 const PING_IP = '4.2.2.2';
@@ -19,6 +20,20 @@ const ping = function() {
     });
   })
 }
+
+/**
+ * get default route to the internet
+ */
+router.get('/gateway', (req, res) => {
+  exec("ip route | grep default | awk '{ print $3 } | xargs", (err, stdout, stderr) => {
+    if (err) {
+      console.error(err)
+      res.sendStatus(500)
+      return
+    }
+    res.send({gateway: stdout})
+  })
+})
 
 router.get('/status', (req, res, next) => {
   let ping_success = 0;
