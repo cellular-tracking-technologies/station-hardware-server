@@ -25,13 +25,13 @@ const ping = function() {
  * get default route to the internet
  */
 router.get('/gateway', (req, res) => {
-  exec("ip route | grep default | awk '{ print $3 } | xargs", (err, stdout, stderr) => {
+  exec("ip route | grep default | awk '{ print $3 }' | xargs", (err, stdout, stderr) => {
     if (err) {
       console.error(err)
       res.sendStatus(500)
       return
     }
-    res.send({gateway: stdout})
+    res.send({gateway: stdout.trim()})
   })
 })
 
