@@ -9,6 +9,7 @@ var ledRouter = require('./routes/led');
 var internetRouter = require('./routes/internet');
 var peripheralRouter = require('./routes/peripherals');
 const radioRouter = require('./routes/radio-server');
+const controlRouter = require('./routes/control');
 
 var app = express();
 
@@ -24,6 +25,7 @@ app.use('/led', ledRouter);
 app.use('/peripherals', peripheralRouter);
 app.use('/internet', internetRouter);
 app.use('/radio', radioRouter);
+app.use('/control', controlRouter);
 
 // error handler
 app.use(function(err, req, res, next) {
