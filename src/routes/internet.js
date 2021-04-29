@@ -7,7 +7,7 @@ const icmp = require("icmp");
 import { exec } from 'child_process'
 
 const DEFAULT_PING_COUNT = 3;
-const PING_IP = '4.2.2.2';
+const PING_IP = '8.8.8.8';
 
 const ping = function() {
   return new Promise((resolve, reject) => {
