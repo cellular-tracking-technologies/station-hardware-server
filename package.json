@@ -26,7 +26,7 @@
     "icmp": "^1.4.0",
     "node-fetch": "^2.6.1",
     "wifi-config": "^1.0.1",
-    "ws": "^7.2.3"
+    "ws": "^7.4.6"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
