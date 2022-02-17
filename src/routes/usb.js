@@ -71,7 +71,7 @@ router.get('/unmount', function(req, res, next) {
 });
 
 router.get('/data', function(req, res, next) {
-    usb.copyTo("/data", /.*(data|rotated|SG_files|SGdata|uploaded|ctt|sg|.csv|.csv.gz|.tar.gz)$/, (err)=>{
+    usb.copyTo("/data", /.*$/, (err)=>{
         if(err){
             res.json(fail);
         }else{
