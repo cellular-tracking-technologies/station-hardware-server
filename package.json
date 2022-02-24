@@ -1,7 +1,7 @@
 {
   "name": "station-hardware-server",
   "author": "Bob Fogg",
-  "version": "0.5.5",
+  "version": "0.5.6",
   "scripts": {
     "build": "babel src -d lib",
     "start": "node ./lib/bin/www",
