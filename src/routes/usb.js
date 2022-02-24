@@ -71,6 +71,7 @@ router.get('/unmount', function(req, res, next) {
 });
 
 router.get('/data', function(req, res, next) {
+    req.setTimeout(1000*60*10); // set a 10 minute timeout for the usb transfer process to complete
     usb.copyTo("/data", /.*$/, (err)=>{
         if(err){
             res.json(fail);
